@@ -1,0 +1,42 @@
+task:
+i)  create a fully managed multi node cluster of hadoop2
+ii)  jdk8 or later you can use
+iii)  there will be  one namenode  and 10 datanodes
+iv)  create all this by using only one ec2 instances
+v)  all nodes must be running  in containers only under ec2 instance
+vi)  container must be running automatically even after reboot or instances
+solve::
+
+#install jdk
+wget http://monalisa.cern.ch/MONALISA/download/java/jdk-8-linux-x64.rpm
+rpm -q jdk-8-linux-x84.rpm
+rpm -ql jdk-8-linux-x84.rpm
+# start and install docker
+yum install docker
+rpm -q docker
+systemctl start docker
+systemctl enable  docker
+systemctl  enable docker
+systemctl status docker
+#Pull Docker Images
+docker pull swapnillinux/cloudera-hadoop-namenode
+docker pull swapnillinux/cloudera-hadoop-yarnmaster
+docker pull swapnillinux/cloudera-hadoop-datanode
+#Create a Docker Bridged Network
+docker network create hadoop
+#Create Yarnmaster
+docker run -d --net hadoop --net-alias yarnmaster  --name yarnmaster -h yarnmaster -p 8032:8032 -p 8088:8088 swapnillinux/cloudera-hadoop-yarnmaster
+#Create Namenode
+docker run -d --net hadoop --net-alias namenode --name namenode -h namenode -p 8020:8020 swapnillinux/cloudera-hadoop-namenode
+#create Datanode
+docker run -d --net hadoop --net-alias datanode1  -h datanode1 --name datanode1 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+#Creating additional Datanodes
+docker run -d --net hadoop --net-alias datanode2  -h datanode2 --name datanode2 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode3 --name datanode3 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode4 --name datanode4 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode5 --name datanode5 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode6 --name datanode6 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode7 --name datanode7 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode8 --name datanode8 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode9 --name datanode9 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
+docker run -d --net hadoop --net-alias datanode2  -h datanode10 --name datanode10 --link namenode --link yarnmaster swapnillinux/cloudera-hadoop-datanode
